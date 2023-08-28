@@ -1,5 +1,4 @@
 # backend
---
 clone 후
 ```
 pip install -r requirements.txt

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.hashers import make_password
 from .models import Member
 
@@ -15,6 +15,6 @@ def register(request):
             )
             member.password = make_password(member.password)
             member.save()
-            return redirect('/register')
-    return redirect('/register')
+            return HttpResponse("회원가입 성공")
+    return HttpResponse("회원가입 실패")
         

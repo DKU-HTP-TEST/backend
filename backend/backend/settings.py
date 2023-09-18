@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'member.apps.MemberConfig',
+    'htp_test.apps.HtpTestConfig',
     'corsheaders',
 ]
 

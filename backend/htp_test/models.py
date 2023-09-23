@@ -6,3 +6,9 @@ class HTP(models.Model):
     home = models.TextField()
     tree = models.TextField()
     person = models.TextField()
+
+class Image(models.Model):
+    image = models.ImageField(upload_to='images/')
+
+    # def __str__(self):
+    #     return self.image.name

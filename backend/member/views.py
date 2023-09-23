@@ -15,6 +15,6 @@ def register(request):
             )
             member.password = make_password(member.password)
             member.save()
+            
             return HttpResponse("회원가입 성공")
     return HttpResponse("회원가입 실패")
-        

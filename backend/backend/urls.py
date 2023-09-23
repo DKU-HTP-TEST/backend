@@ -24,3 +24,4 @@ urlpatterns = [
     path('register/', register),
     path('htp_test/', include('htp_test.urls'))
 ]
+

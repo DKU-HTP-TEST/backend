@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.hashers import make_password
+from .auth import MemberAuth
 from .models import Member
+
 
 # Create your views here.
 def register(request):
@@ -18,3 +20,13 @@ def register(request):
             
             return HttpResponse("회원가입 성공")
     return HttpResponse("회원가입 실패")
+
+def login(request):
+    if request.method == 'POST':
+        user_id = request.POST.get("user_id")
+        password = request.POST.get("password")
+        user = MemberAuth.authenticate(request, user_id=user_id, password=password)
+        if user:
+            return HttpResponse('로그인 성공')
+        else:
+            return HttpResponse('로그인 실패')

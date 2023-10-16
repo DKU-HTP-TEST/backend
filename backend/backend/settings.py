@@ -148,6 +148,7 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 AUTHENTICATION_BACKENDS = [
-    "member.auth.MemberAuth"
+    "member.auth.MemberAuth",
+    'django.contrib.auth.backends.ModelBackend',
 ]
 

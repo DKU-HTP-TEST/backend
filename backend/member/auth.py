@@ -5,7 +5,7 @@ from .models import Member
 class MemberAuth:
     def authenticate(request, user_id=None, password=None, *args, **kwargs):
         if not user_id or not password:
-            if request.user.is_authernticated:
+            if request.user.is_authenticated:
                 return request.user
             return None
 

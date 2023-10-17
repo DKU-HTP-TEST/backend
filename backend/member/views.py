@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework import status
 from .auth import MemberAuth
 from .models import Member
 
@@ -26,7 +29,8 @@ def login(request):
         user_id = request.POST.get("user_id")
         password = request.POST.get("password")
         user = MemberAuth.authenticate(request, user_id=user_id, password=password)
+        print(user_id)
         if user:
-            return HttpResponse('로그인 성공')
+            return HttpResponse('login success', status=200)
         else:
-            return HttpResponse('로그인 실패')
+            return HttpResponse('login false', status=402)

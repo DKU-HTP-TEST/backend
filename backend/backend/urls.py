@@ -26,5 +26,7 @@ urlpatterns = [
     path('htp_test/', include('htp_test.urls')),
     path('login/', login),
     path('id_check/', id_check),
+    # path('get_user/', get_user),
+    # path('get_user/', get),
 ]
 

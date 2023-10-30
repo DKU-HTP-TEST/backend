@@ -1,13 +1,13 @@
 import random
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from .models import HTP, Image
+from .models import HTP, Image_house, Image_tree, Image_person
 from . import views
 
 
 # Create your views here.
 
-def analyze_img(request):
+def analyze_img_house(request):
     if request.method == 'POST':
 
         # 이미지 업로드를 위한 폼에서 'image' 필드 설정
@@ -16,38 +16,101 @@ def analyze_img(request):
 
         if uploaded_image:
             # Image를 사용하여 이미지 저장
-            image_model = Image(image=uploaded_image)
-            image_model.save()
+            image_model_house = Image_house(image=uploaded_image)
+            image_model_house.save()
 
             #여기에서 인공지능 분석 등을 수행
 
 
             # 분석 결과 생성 (랜덤값)
-            home_result = random.randint(0, 10)
-            tree_result = random.randint(0, 10)
-            person_result = random.randint(0, 10)
+            house_result = random.randint(0, 10)
             
             # 새로운 HTP 객체 생성 및 데이터베이스에 저장
-            result = HTP.objects.create(home=home_result, tree=tree_result, person=person_result)
+            result = HTP.objects.create(home=house_result)
 
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-        
          
             # JSON 형식의 응답 생성
             result_data = {
-                "image_url": image_model.image.url,
-                "home": home_result,
-                "tree": tree_result,
-                "person": person_result,
+                "image_url": image_model_house.image.url,
+                "tree": house_result,
             }
         
         return JsonResponse(result_data)
 
     return JsonResponse({"error": "Invalid request method"})
 
+def analyze_img_tree(request):
+    if request.method == 'POST':
 
+        # 이미지 업로드를 위한 폼에서 'image' 필드 설정
+        # POSTMAN에서 KEY 값을 image라 작성해야 함
+        uploaded_image = request.FILES.get('image')
+
+        if uploaded_image:
+            # Image를 사용하여 이미지 저장
+            image_model_tree = Image_tree(image=uploaded_image)
+            image_model_tree.save()
+
+            #여기에서 인공지능 분석 등을 수행
+
+
+            # 분석 결과 생성 (랜덤값)
+            tree_result = random.randint(0, 10)
+            
+            # 새로운 HTP 객체 생성 및 데이터베이스에 저장
+            result = HTP.objects.create(tree=tree_result)
+
+            #결과 나왔으면 이미지 삭제..?
+            # image_model = Image.objects.get(pk=)
+            # image_model.delete()
+         
+            # JSON 형식의 응답 생성
+            result_data = {
+                "image_url": image_model_tree.image.url,
+                "tree": tree_result,
+            }
+        
+        return JsonResponse(result_data)
+
+    return JsonResponse({"error": "Invalid request method"})
+
+def analyze_img_person(request):
+    if request.method == 'POST':
+
+        # 이미지 업로드를 위한 폼에서 'image' 필드 설정
+        # POSTMAN에서 KEY 값을 image라 작성해야 함
+        uploaded_image = request.FILES.get('image')
+
+        if uploaded_image:
+            # Image를 사용하여 이미지 저장
+            image_model_person = Image_person(image=uploaded_image)
+            image_model_person.save()
+
+            #여기에서 인공지능 분석 등을 수행
+
+
+            # 분석 결과 생성 (랜덤값)
+            person_result = random.randint(0, 10)
+            
+            # 새로운 HTP 객체 생성 및 데이터베이스에 저장
+            result = HTP.objects.create(person=person_result)
+
+            #결과 나왔으면 이미지 삭제..?
+            # image_model = Image.objects.get(pk=)
+            # image_model.delete()
+        
+            # JSON 형식의 응답 생성
+            result_data = {
+                "image_url": image_model_person.image.url,
+                "tree": person_result,
+            }
+        
+        return JsonResponse(result_data)
+
+    return JsonResponse({"error": "Invalid request method"})
 
 def result(request, result_id):
     try:

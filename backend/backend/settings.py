@@ -152,3 +152,13 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+
+MAX_UPLOAD_SIZE = 5242880 # 최대 파일 크기 (5MB)
+
+
+ALLOWED_FILE_TYPES = [ # 허용되는 파일 형식
+    'image/jpeg',
+    'image/png',
+]
+
+

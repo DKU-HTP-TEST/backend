@@ -59,12 +59,13 @@ def get_user(request):
     if request.method == 'GET':
         token = request.META.get('HTTP_AUTH')
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        username = decoded.get('username')
         user_id = decoded.get('user_id')
-        useremail = decoded.get('useremail')
+        user = Member.objects.get(user_id=user_id)
+
         res =  {
-            'username': username,
-            'user_id': user_id,
-            'useremail': useremail,
+            'username': user.username,
+            'user_id': user.user_id,
+            'useremail': user.useremail,
         }
-        return JsonResponse(res)
+        print(res)
+        return JsonResponse(res, status=200)

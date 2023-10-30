@@ -7,8 +7,11 @@ class HTP(models.Model):
     tree = models.TextField()
     person = models.TextField()
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
+class Image_house(models.Model):
+    image = models.ImageField(upload_to='img_house/') #upload_to는 파일이 저장되는 디렉토리 경로
 
-    # def __str__(self):
-    #     return self.image.name
+class Image_tree(models.Model):
+    image = models.ImageField(upload_to='img_tree/')
+
+class Image_person(models.Model):
+    image = models.ImageField(upload_to='img_person/')

@@ -55,17 +55,17 @@ def login(request):
         else:
             return HttpResponse('login false', status=402)
         
-# def get_user(request):
-#     if request.method == 'GET':
-#         token = request.META.get('HTTP_MY_HEADER')
-#         print(token)
-#         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-#         username = decoded.get('username')
-#         user_id = decoded.get('user_id')
-#         useremail = decoded.get('useremail')
-#         res =  {
-#             'username': username,
-#             'user_id': user_id,
-#             'useremail': useremail,
-#         }
-#         return JsonResponse(res)
+def get_user(request):
+    if request.method == 'GET':
+        token = request.META.get('HTTP_AUTH')
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user_id = decoded.get('user_id')
+        user = Member.objects.get(user_id=user_id)
+
+        res =  {
+            'username': user.username,
+            'user_id': user.user_id,
+            'useremail': user.useremail,
+        }
+        print(res)
+        return JsonResponse(res, status=200)

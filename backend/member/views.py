@@ -57,7 +57,7 @@ def login(request):
         
 def get_user(request):
     if request.method == 'GET':
-        token = request.META.get('HTTP_AUTH')
+        token = request.META.get('HTTP_AUTHORIZATION')
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user_id = decoded.get('user_id')
         user = Member.objects.get(user_id=user_id)
@@ -69,3 +69,11 @@ def get_user(request):
         }
         print(res)
         return JsonResponse(res, status=200)
+    
+def change_info(request):
+    if request.method == 'POST':
+        token = request.META.get('HTTP_AUTHORIZATION')
+        decoded = jwt.decode(token, settings,SECRET_KEY, algorithms=['HS256'])
+        user_id = decoded.get('user_id')
+        useremail = request.POST.get("useremail")
+

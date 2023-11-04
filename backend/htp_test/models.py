@@ -15,3 +15,4 @@ class Image_tree(models.Model):
 
 class Image_person(models.Model):
     image = models.ImageField(upload_to='img_person/')
+

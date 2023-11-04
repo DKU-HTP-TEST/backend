@@ -1,4 +1,5 @@
 import random
+from datetime import datetime 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import HTP, Image_house, Image_tree, Image_person
@@ -25,9 +26,9 @@ def analyze_img_house(request):
             # 분석 결과 생성 (랜덤값)
             house_result = random.randint(0, 10)
             
-            # 새로운 HTP 객체 생성 및 데이터베이스에 저장
-            result = HTP.objects.create(home=house_result)
-
+            # 새로운 HTP 객체 생성 및 DB 저장
+            htp_obj = HTP.objects.create(home=house_result, created_date=datetime.now())
+            htp_obj.save()
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
@@ -60,8 +61,12 @@ def analyze_img_tree(request):
             # 분석 결과 생성 (랜덤값)
             tree_result = random.randint(0, 10)
             
-            # 새로운 HTP 객체 생성 및 데이터베이스에 저장
-            result = HTP.objects.create(tree=tree_result)
+            # 이전에 생성된 HTP 객체 가져오기
+            htp_obj = HTP.objects.latest('id')
+
+            # HTP 객체에 결과 값 저장
+            htp_obj.tree = tree_result
+            htp_obj.save()
 
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
@@ -95,8 +100,12 @@ def analyze_img_person(request):
             # 분석 결과 생성 (랜덤값)
             person_result = random.randint(0, 10)
             
-            # 새로운 HTP 객체 생성 및 데이터베이스에 저장
-            result = HTP.objects.create(person=person_result)
+            # 이전에 생성된 HTP 객체 가져오기
+            htp_obj = HTP.objects.latest('id')
+
+            # HTP 객체에 결과 값 저장
+            htp_obj.person = person_result
+            htp_obj.save()
 
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)

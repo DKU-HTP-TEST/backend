@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from member.views import register, login, id_check, get_user
 from htp_test import views
 
 

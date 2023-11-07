@@ -36,7 +36,7 @@ def analyze_img_house(request):
             # JSON 형식의 응답 생성
             result_data = {
                 "image_url": image_model_house.image.url,
-                "tree": house_result,
+                "house": house_result,
             }
         
         return JsonResponse(result_data)

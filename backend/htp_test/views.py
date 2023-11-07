@@ -121,9 +121,9 @@ def analyze_img_person(request):
 
     return JsonResponse({"error": "Invalid request method"})
 
-def result(request, result_id):
+def result(request, user_id):
     try:
-        result = HTP.objects.get(pk=result_id)    #...?어떤거랑 외래키?
+        result = HTP.objects.get(pk=user_id)    #...?어떤거랑 외래키?
         result_data = {
             "home": result.home,
             "tree": result.tree,
@@ -134,4 +134,14 @@ def result(request, result_id):
     except HTP.DoesNotExist:
         return JsonResponse({"error": "Result not found"}, status=404)
 
+def del_result(request):
+    if request.method == 'DELETE':
+        user_id = request.data.get('user_id')
+        del_date = request.data.get('del_date')
+
+        result = HTP.objects.get(user_id = user_id, create_date = del_date)
+        result.delete()
+        return HttpResponse("삭제 성공", status=200)
+    else:
+        return HttpResponse('error', status = 400)
 

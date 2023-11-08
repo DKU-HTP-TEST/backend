@@ -8,6 +8,7 @@ from .auth import MemberAuth
 from .models import Member
 from .serializer import MyTokenObtainPairSerializer
 import jwt
+import json
 
 
 # Create your views here.
@@ -73,7 +74,21 @@ def get_user(request):
 def change_info(request):
     if request.method == 'POST':
         token = request.META.get('HTTP_AUTHORIZATION')
-        decoded = jwt.decode(token, settings,SECRET_KEY, algorithms=['HS256'])
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user_id = decoded.get('user_id')
         useremail = request.POST.get("useremail")
 
+def delete(request, user_id):
+    if request.method == 'DELETE':
+        if user_id:
+            try:
+                user = Member.objects.get(user_id=user_id)
+                if user:
+                    user.delete()
+                    return JsonResponse({'message': 'User deleted successfully'}, status=200)
+            except Member.DoesNotExist:
+                return JsonResponse({'message': 'User not found'}, status=404)
+        else:
+            return JsonResponse({'message': 'user_id is missing in the request'}, status=400)
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=400)

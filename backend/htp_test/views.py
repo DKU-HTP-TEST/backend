@@ -2,6 +2,8 @@ import random
 from datetime import datetime 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+import jwt
 from .models import HTP, Image_house, Image_tree, Image_person
 from . import views
 
@@ -121,27 +123,54 @@ def analyze_img_person(request):
 
     return JsonResponse({"error": "Invalid request method"})
 
-def result(request, user_id):
-    try:
-        result = HTP.objects.get(pk=user_id)    #...?어떤거랑 외래키?
+def get_dates(request):
+    if request.method == 'GET':
+        token = request.META.get('HTTP_AUTHORIZATION')
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user_id = decoded.get('user_id')
+
+        user = HTP.objects.filter(user_id=user_id)
+        dates = [obj.created_date for obj in user]
+        print(dates)
+        result_data = {
+            "dates": dates,
+        }
+        return JsonResponse(result_data, status=200)
+
+
+def result(request):
+    if request.method == 'GET':
+        
+        token = request.META.get('HTTP_AUTHORIZATION')
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user_id = decoded.get('user_id')
+        date = request.GET.get('date')
+        
+        result = HTP.objects.get(user_id=user_id, created_date=date)
+
         result_data = {
             "home": result.home,
             "tree": result.tree,
             "person": result.person,
-            "created_date": result.created_date,
+            # "created_date": result.created_date,
         }
+        
         return JsonResponse(result_data)
-    except HTP.DoesNotExist:
-        return JsonResponse({"error": "Result not found"}, status=404)
+        
 
 def del_result(request):
     if request.method == 'DELETE':
-        user_id = request.data.get('user_id')
-        del_date = request.data.get('del_date')
 
-        result = HTP.objects.get(user_id = user_id, create_date = del_date)
+        token = request.META.get('HTTP_AUTHORIZATION')
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user_id = decoded.get('user_id')
+        del_date = request.GET.get('del_date')
+
+        result = HTP.objects.get(user_id = user_id, created_date = del_date)
         result.delete()
+
         return HttpResponse("삭제 성공", status=200)
+    
     else:
         return HttpResponse('error', status = 400)
 

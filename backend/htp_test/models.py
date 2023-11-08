@@ -1,11 +1,12 @@
+from django.utils import timezone
 from django.db import models
 from member.models import Member
 
 
 class HTP(models.Model):
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(Member, on_delete=models.CASCADE)
-    created_date = models.DateField(auto_now=True)
+    user_id = models.ForeignKey(Member, to_field="user_id" ,on_delete=models.CASCADE)
+    created_date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
     home = models.TextField()
     tree = models.TextField()
     person = models.TextField()

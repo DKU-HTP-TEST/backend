@@ -8,7 +8,6 @@ from .auth import MemberAuth
 from .models import Member
 from .serializer import MyTokenObtainPairSerializer
 import jwt
-import json
 
 
 # Create your views here.
@@ -85,10 +84,35 @@ def delete(request, user_id):
                 user = Member.objects.get(user_id=user_id)
                 if user:
                     user.delete()
-                    return JsonResponse({'message': 'User deleted successfully'}, status=200)
+                    return HttpResponse({'message': '탈퇴 성공'}, status=200)
             except Member.DoesNotExist:
-                return JsonResponse({'message': 'User not found'}, status=404)
+                return HttpResponse({'message': 'User not found'}, status=404)
         else:
-            return JsonResponse({'message': 'user_id is missing in the request'}, status=400)
+            return HttpResponse({'message': 'user_id is missing in the request'}, status=400)
     else:
-        return JsonResponse({'message': 'Invalid request method'}, status=400)
+        return HttpResponse({'message': 'Invalid request method'}, status=400)
+
+def update_user(request, user_id):
+    if request.method == "POST":
+        password = request.POST.get("password")
+        useremail = request.POST.get("email")
+        try:
+            user = Member.objects.get(user_id=user_id)
+            # user.useremail = useremail
+            # return HttpResponse(user.useremail)
+            # user = MemberAuth.authenticate(request, user_id=user_id, password=password)
+            if password:
+                user.password = password
+                return HttpResponse(useremail)
+            if useremail:
+                user.useremail = useremail
+                return HttpResponse(useremail)
+            user.save()
+            # return JsonResponse({'message': 'Update successfully'}, status=200)
+            return HttpResponse("수정 성공", status=200)
+        except Member.DoesNotExist as e:
+            return HttpResponse({'error': f'User with ID {user_id} does not exist'}, status=404)
+        except Exception as e:
+            return HttpResponse({'error': str(e)}, status=500)
+    else:
+        return HttpResponse({'error': 'Invalid method'}, status=405)

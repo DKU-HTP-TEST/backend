@@ -7,4 +7,5 @@ urlpatterns = [
     path('analyze_img_person/', views.analyze_img_person),
     path('result/', views.result),
     path('del_result/', views.del_result),
+    path('get_dates/', views.get_dates),
 ]

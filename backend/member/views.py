@@ -74,7 +74,7 @@ def get_user(request):
 def change_info(request):
     if request.method == 'POST':
         token = request.META.get('HTTP_AUTHORIZATION')
-        decoded = jwt.decode(token, settings,SECRET_KEY, algorithms=['HS256'])
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user_id = decoded.get('user_id')
         useremail = request.POST.get("useremail")
 

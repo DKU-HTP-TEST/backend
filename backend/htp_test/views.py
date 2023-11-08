@@ -38,7 +38,7 @@ def analyze_img_house(request):
             # JSON 형식의 응답 생성
             result_data = {
                 "image_url": image_model_house.image.url,
-                "tree": house_result,
+                "house": house_result,
             }
         
         return JsonResponse(result_data)
@@ -131,7 +131,7 @@ def get_dates(request):
 
         user = HTP.objects.filter(user_id=user_id)
         dates = [obj.created_date for obj in user]
-
+        print(dates)
         result_data = {
             "dates": dates,
         }

@@ -92,24 +92,22 @@ def delete(request, user_id):
     else:
         return HttpResponse({'message': 'Invalid request method'}, status=400)
 
-def update_user(request, user_id):
+def update_user(request):
     if request.method == "POST":
+        token = request.META.get('HTTP_AUTHORIZATION')
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user_id = decoded.get('user_id')
+
         password = request.POST.get("password")
-        useremail = request.POST.get("email")
+        useremail = request.POST.get("useremail")
         try:
-            user = Member.objects.get(user_id=user_id)
-            # user.useremail = useremail
-            # return HttpResponse(user.useremail)
-            # user = MemberAuth.authenticate(request, user_id=user_id, password=password)
-            if password:
-                user.password = password
-                return HttpResponse(useremail)
-            if useremail:
-                user.useremail = useremail
-                return HttpResponse(useremail)
-            user.save()
-            # return JsonResponse({'message': 'Update successfully'}, status=200)
-            return HttpResponse("수정 성공", status=200)
+            user = Member.objects.filter(user_id=user_id)
+            print(user)
+            user.update(useremail=useremail)
+            user.update(password=make_password(password))
+            
+            return HttpResponse(useremail, password)
+        
         except Member.DoesNotExist as e:
             return HttpResponse({'error': f'User with ID {user_id} does not exist'}, status=404)
         except Exception as e:

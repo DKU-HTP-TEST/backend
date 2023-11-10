@@ -5,6 +5,8 @@ from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 import jwt
 from .models import HTP, Image_house, Image_tree, Image_person
+from member.models import Member
+
 from . import views
 
 
@@ -12,6 +14,12 @@ from . import views
 
 def analyze_img_house(request):
     if request.method == 'POST':
+        token = request.META.get('HTTP_AUTHORIZATION')
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
+        user_id = decoded.get('user_id')
+
+        user = Member.objects.get(user_id=user_id)
+        print(user)
 
         # 이미지 업로드를 위한 폼에서 'image' 필드 설정
         # POSTMAN에서 KEY 값을 image라 작성해야 함
@@ -29,7 +37,7 @@ def analyze_img_house(request):
             house_result = random.randint(0, 10)
             
             # 새로운 HTP 객체 생성 및 DB 저장
-            htp_obj = HTP.objects.create(home=house_result, created_date=datetime.now())
+            htp_obj = HTP(home=house_result, user_id=user, created_date=datetime.now())
             htp_obj.save()
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
@@ -128,9 +136,10 @@ def get_dates(request):
         token = request.META.get('HTTP_AUTHORIZATION')
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user_id = decoded.get('user_id')
+        user = Member.objects.get(user_id=user_id)
 
-        user = HTP.objects.filter(user_id=user_id)
-        dates = [obj.created_date for obj in user]
+        object = HTP.objects.filter(user_id=user)
+        dates = [obj.created_date for obj in object]
         print(dates)
         result_data = {
             "dates": dates,
@@ -144,9 +153,12 @@ def result(request):
         token = request.META.get('HTTP_AUTHORIZATION')
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user_id = decoded.get('user_id')
+
+        user = Member.objects.get(user_id=user_id)
+
         date = request.GET.get('date')
         
-        result = HTP.objects.get(user_id=user_id, created_date=date)
+        result = HTP.objects.get(user_id=user, created_date=date)
 
         result_data = {
             "home": result.home,
@@ -164,9 +176,12 @@ def del_result(request):
         token = request.META.get('HTTP_AUTHORIZATION')
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user_id = decoded.get('user_id')
+
+        user = Member.objects.get(user_id=user_id)
+
         del_date = request.GET.get('del_date')
 
-        result = HTP.objects.get(user_id = user_id, created_date = del_date)
+        result = HTP.objects.get(user_id = user, created_date = del_date)
         result.delete()
 
         return HttpResponse("삭제 성공", status=200)

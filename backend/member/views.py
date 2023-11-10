@@ -61,7 +61,6 @@ def get_user(request):
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user_id = decoded.get('user_id')
         user = Member.objects.get(user_id=user_id)
-
         res =  {
             'username': user.username,
             'user_id': user.user_id,

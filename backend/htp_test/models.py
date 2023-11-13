@@ -5,7 +5,7 @@ from member.models import Member
 
 class HTP(models.Model):
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(Member, to_field="user_id", on_delete=models.DO_NOTHING)
+    user_id = models.ForeignKey(Member, to_field="user_id", on_delete=models.DO_NOTHING, null=True)
     created_date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
     home = models.TextField(null=True)
     tree = models.TextField(null=True)

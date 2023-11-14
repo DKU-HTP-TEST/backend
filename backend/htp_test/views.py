@@ -16,17 +16,11 @@ from . import views
 def analyze_img_house(request):
     if request.method == 'POST':
         token = request.META.get('HTTP_AUTHORIZATION')
-<<<<<<< HEAD
         decoded = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
         user_id = decoded.get('user_id')
 
         user = Member.objects.get(user_id=user_id)
         print(user)
-=======
-        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        user_id = decoded.get('user_id')
-        user = Member.objects.get(user_id=user_id)
->>>>>>> 7386dd7f4115250a3b24ea024004e4b7c0dd8757
 
         # 이미지 업로드를 위한 폼에서 'image' 필드 설정
         # POSTMAN에서 KEY 값을 image라 작성해야 함
@@ -44,11 +38,7 @@ def analyze_img_house(request):
             house_result = random.randint(0, 10)
             
             # 새로운 HTP 객체 생성 및 DB 저장
-<<<<<<< HEAD
             htp_obj = HTP(home=house_result, user_id=user, created_date=datetime.now())
-=======
-            htp_obj = HTP.objects.create(home=house_result, user_id = user, created_date=datetime.now())
->>>>>>> 7386dd7f4115250a3b24ea024004e4b7c0dd8757
             htp_obj.save()
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
@@ -149,17 +139,13 @@ def get_dates(request):
         user_id = decoded.get('user_id')
         user = Member.objects.get(user_id=user_id)
 
-<<<<<<< HEAD
         object = HTP.objects.filter(user_id=user)
         dates = [obj.created_date for obj in object]
+        id = [obj.id for obj in object]
         print(dates)
-=======
-        user = HTP.objects.filter(user_id=user_id)
-        dates = [obj.created_date for obj in user]
-        
->>>>>>> 7386dd7f4115250a3b24ea024004e4b7c0dd8757
         result_data = {
             "dates": dates,
+            "id": id,
         }
         return JsonResponse(result_data, status=200)
 
@@ -172,11 +158,10 @@ def result(request):
         user_id = decoded.get('user_id')
 
         user = Member.objects.get(user_id=user_id)
-
         date = request.GET.get('date')
+        id = request.GET.get('id')
         
-        result = HTP.objects.get(user_id=user, created_date=date)
-
+        result = HTP.objects.get(user_id=user, created_date=date, id=id)
         result_data = {
             "home": result.home,
             "tree": result.tree,

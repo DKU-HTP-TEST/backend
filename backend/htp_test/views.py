@@ -1,3 +1,4 @@
+import os
 import random
 from datetime import datetime 
 from django.shortcuts import render
@@ -8,10 +9,74 @@ from member.models import Member
 from .models import HTP, Image_house, Image_tree, Image_person
 from member.models import Member
 
-from . import views
+import torch
+from torchvision import transforms
+from PIL import Image
 
+import sys
+sys.path.append('C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/yolov5/')
+from yolov5 import detect
+
+def res_house(label, x, y, w, h):
+    class_label = f'클래스: {label}'
+    box_info = f'박스 좌표: ({x:.2f}, {y:.2f}, {w:.2f}, {h:.2f})'
+
+    # 클래스에 따른 해석 추가
+    if label == 0:
+        interpretation = '클래스 0에 대한 해석'
+    elif label == 1:
+        interpretation = '클래스 1에 대한 해석'
+    elif label == 2:
+        interpretation = '클래스 2에 대한 해석'
+    elif label == 3:
+        interpretation = '클래스 3에 대한 해석'
+    elif label == 4:
+        interpretation = '클래스 4에 대한 해석'
+    elif label == 5:
+        interpretation = '클래스 5에 대한 해석'
+    elif label == 6:
+        interpretation = '클래스 6에 대한 해석'
+    elif label == 7:
+        interpretation = '클래스 7에 대한 해석'
+    elif label == 8:
+        interpretation = '클래스 8에 대한 해석'
+    elif label == 9:
+        interpretation = '클래스 9에 대한 해석'
+    elif label == 10:
+        interpretation = '클래스 10에 대한 해석'
+    elif label == 11:
+        interpretation = '클래스 11에 대한 해석'
+    elif label == 12:
+        interpretation = '클래스 12에 대한 해석'
+    elif label == 13:
+        interpretation = '클래스 13에 대한 해석'
+    elif label == 14:
+        interpretation = '클래스 14에 대한 해석'
+
+
+    return interpretation
 
 # Create your views here.
+def res_house_from_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+    except FileNotFoundError:
+        return ['File not found.']
+    
+    analysis = []
+
+    for line in lines:
+        parts = line.split()
+        label, x, y, w, h = map(float, parts)
+
+        # 정규화된 좌표 값을 해석하여 결과에 추가
+        analysis.append(res_house(int(label), x, y, w, h))
+
+    # 파일의 내용을 그대로 반환
+    return "".join(analysis)
+
+
 
 def analyze_img_house(request):
     if request.method == 'POST':
@@ -32,14 +97,27 @@ def analyze_img_house(request):
             image_model_house.save()
 
             #여기에서 인공지능 분석 등을 수행
+            image_path = image_model_house.image.path
+            
+            detect.run(source = image_path, weights = 'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/house_model/best.pt', save_txt=True)
 
+            #확장자 제거
+            image_file_name, _ = os.path.splitext(os.path.basename(image_model_house.image.name))
+
+            # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = f'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/runs/detect/exp/labels/{image_file_name}.txt'
+            print(image_file_name)
+
+            # house_result = res_house(result)
+            house_result = res_house_from_file(file_path)
 
             # 분석 결과 생성 (랜덤값)
-            house_result = random.randint(0, 10)
+            # house_result = random.randint(0, 10)
             
             # 새로운 HTP 객체 생성 및 DB 저장
             htp_obj = HTP(home=house_result, user_id=user, created_date=datetime.now())
             htp_obj.save()
+
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()

@@ -102,8 +102,9 @@ def update_user(request):
         try:
             user = Member.objects.filter(user_id=user_id)
             print(user)
+            if not password == "":
+                user.update(password=make_password(password))
             user.update(useremail=useremail)
-            user.update(password=make_password(password))
             
             return HttpResponse(useremail, password)
         

@@ -1,4 +1,4 @@
-import random
+import random, sys, os
 from datetime import datetime 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -8,7 +8,10 @@ from member.models import Member
 from .models import HTP, Image_house, Image_tree, Image_person
 from member.models import Member
 
+sys.path.append('D:/CAPSTONE_HTP/HTP-backend/backend/htp_test')
+
 from . import views
+from yolov5 import detect
 
 
 # Create your views here.
@@ -64,11 +67,13 @@ def analyze_img_tree(request):
         if uploaded_image:
             # Image를 사용하여 이미지 저장
             image_model_tree = Image_tree(image=uploaded_image)
-            image_model_tree.save()
+            image_model_tree.save("tree.jpg")
 
             #여기에서 인공지능 분석 등을 수행
+            detect.run(weights='defects/weights/best.pt', save_csv=True, source='../img_tree/tree.jpg', conf=0.02, project='./result' )
 
-
+            os.remove("./img_tree/tree.jpg")
+            
             # 분석 결과 생성 (랜덤값)
             tree_result = random.randint(0, 10)
             

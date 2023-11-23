@@ -11,6 +11,7 @@ class HTP(models.Model):
     tree = models.TextField(null=True)
     person = models.TextField(null=True)
 
+
 class Image_house(models.Model):
     image = models.ImageField(upload_to='img_house/') #upload_to는 파일이 저장되는 디렉토리 경로
 

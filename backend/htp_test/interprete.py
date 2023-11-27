@@ -153,24 +153,34 @@ def res_person(df, img_w, img_h):
 
         elif label == "머리카락":
             res += ''
+            
         elif label == "목":
             res += ''
+            
         elif label == "상체":
             res += ''
+            
         elif label == "팔":
             res += ''
+            
         elif label == "손":
             res += ''
+            
         elif label == "다리":
             res += ''
+            
         elif label == "발":
             res += ''
+            
         elif label == "단추":
             res += ''
+            
         elif label == "주머니":
             res += ''
+            
         elif label == "운동화":
             res += ''
+            
         elif label == "여자구두":
             res += ''
 

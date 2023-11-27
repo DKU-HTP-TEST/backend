@@ -12,7 +12,7 @@ def res_tree(df):
 
     tree_size = 0
 
-    for i, label in enumerate(labels_person):
+    for i, label in enumerate(labels_tree):
         num = index.count(i)
         if label == "나무전체":
             if num > 1:
@@ -70,42 +70,42 @@ def res_person(df):
     for i, label in enumerate(labels_person):
         num = index.count(i)
 
-        if label == 0:
-            res = '클래스 0에 대한 해석'
-        elif label == 1:
-            res = '클래스 1에 대한 해석'
-        elif label == 2:
-            res = '클래스 2에 대한 해석'
-        elif label == 3:
-            res = '클래스 3에 대한 해석'
-        elif label == 4:
-            res = '클래스 4에 대한 해석'
-        elif label == 5:
-            res = '클래스 5에 대한 해석'
-        elif label == 6:
-            res = '클래스 6에 대한 해석'
-        elif label == 7:
-            res = '클래스 7에 대한 해석'
-        elif label == 8:
-            res = '클래스 8에 대한 해석'
-        elif label == 9:
-            res = '클래스 9에 대한 해석'
-        elif label == 10:
-            res = '클래스 10에 대한 해석'
-        elif label == 11:
-            res = '클래스 11에 대한 해석'
-        elif label == 12:
-            res = '클래스 12에 대한 해석'
-        elif label == 13:
-            res = '클래스 13에 대한 해석'
-        elif label == 14:
-            res = '클래스 14에 대한 해석'
-        elif label == 15:
-            res = '클래스 15에 대한 해석'
-        elif label == 16:
-            res = '클래스 16에 대한 해석'
-        elif label == 17:
-            res = '클래스 17에 대한 해석'
+        if label =="사람전체":
+            res += '클래스 0에 대한 해석'
+        elif label == "머리":
+            res += '클래스 1에 대한 해석'
+        elif label == "얼굴":
+            res += '클래스 2에 대한 해석'
+        elif label == "눈":
+            res += '클래스 3에 대한 해석'
+        elif label == "코":
+            res += '클래스 4에 대한 해석'
+        elif label == "입":
+            res += '클래스 5에 대한 해석'
+        elif label == "귀":
+            res += '클래스 6에 대한 해석'
+        elif label == "머리카락":
+            res += '클래스 7에 대한 해석'
+        elif label == "목":
+            res += '클래스 8에 대한 해석'
+        elif label == "상체":
+            res += '클래스 9에 대한 해석'
+        elif label == "팔":
+            res += '클래스 10에 대한 해석'
+        elif label == "손":
+            res += '클래스 11에 대한 해석'
+        elif label == "다리":
+            res += '클래스 12에 대한 해석'
+        elif label == "발":
+            res += '클래스 13에 대한 해석'
+        elif label == "단추":
+            res += '클래스 14에 대한 해석'
+        elif label == "주머니":
+            res += '클래스 15에 대한 해석'
+        elif label == "운동화":
+            res += '클래스 16에 대한 해석'
+        elif label == "여자구두":
+            res += '클래스 17에 대한 해석'
 
 
     return res

@@ -99,13 +99,13 @@ def analyze_img_house(request):
             #여기에서 인공지능 분석 등을 수행
             image_path = image_model_house.image.path
             
-            detect.run(source = image_path, weights = r'D:/CAPSTONE_HTP/HTP-backend/backend/htp_test/house_model/best.pt', save_txt=True)
+            detect.run(source = image_path, weights = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/house_model/best.pt', save_txt=True)
 
             # 확장자 제거
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_house.image.name))
 
             # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = r'D:/CAPSTONE_HTP/HTP-backend/backend/runs/detect/exp/labels/'+str(image_file_name)+r'.txt'
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/runs/detect/exp/labels/'+str(image_file_name)+r'.txt'
             print(image_file_name)
             print(file_path)
 
@@ -122,7 +122,7 @@ def analyze_img_house(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-            shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/runs/detect/exp/")
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/runs/detect/exp/")
          
             # JSON 형식의 응답 생성
             result_data_house = {
@@ -153,8 +153,8 @@ def analyze_img_tree(request):
             
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_tree.image.name))
 
-            # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp2/labels/'+str(image_file_name)+r'.txt'
+            # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
 
             df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
@@ -174,7 +174,7 @@ def analyze_img_tree(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp2/")
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/")
          
             # JSON 형식의 응답 생성
             result_data_tree = {
@@ -213,7 +213,7 @@ def analyze_img_person(request):
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_person.image.name))
 
             # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp3/labels/'+str(image_file_name)+r'.txt'
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
 
             df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
@@ -233,7 +233,7 @@ def analyze_img_person(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp3/")
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/")
          
             # JSON 형식의 응답 생성
             result_data_person = {

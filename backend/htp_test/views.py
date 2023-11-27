@@ -14,6 +14,7 @@ from . import views
 from yolov5 import detect
 
 import pandas as pd
+from PIL import Image
 
 
 def res_house(label, x, y, w, h):
@@ -206,6 +207,7 @@ def analyze_img_person(request):
             image_model_person.save()
 
             image_path = image_model_person.image.path
+            img_w, img_h = Image.open(image_path).size
 
             #여기에서 인공지능 분석 등을 수행
             detect.run(weights=r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/tree_model/best.pt', source=image_path, project='./result', save_txt=True )
@@ -219,7 +221,7 @@ def analyze_img_person(request):
 
             # 분석 결과 생성 (랜덤값)
 
-            person_result = res_person(df)
+            person_result = res_person(df, img_w, img_h)
             
             # person_result = random.randint(0, 10)
             

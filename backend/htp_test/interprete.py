@@ -1,9 +1,10 @@
 import pandas as pd
 
-labels = ['나무전체', '기둥', '수관', '가지', '뿌리', '열매', '다람쥐', '나뭇잎', '꽃', '그네']
+labels_tree = ['나무전체', '기둥', '수관', '가지', '뿌리', '열매', '다람쥐', '나뭇잎', '꽃', '그네']
+labels_person = ["사람전체", "머리", "얼굴", "눈", "코", "입", "귀", "머리카락", "목", "상체", "팔", "손", "다리", "발", "단추", "주머니", "운동화", "여자구두"]
 
 def res_tree(df):
-    global labels
+    global labels_tree
 
     res = ""
     index = list(df.index)
@@ -11,7 +12,7 @@ def res_tree(df):
 
     tree_size = 0
 
-    for i, label in enumerate(labels):
+    for i, label in enumerate(labels_tree):
         num = index.count(i)
         if label == "나무전체":
             if num > 1:
@@ -53,5 +54,58 @@ def res_tree(df):
 
         elif label == "그네":
             res += "우울함을 많이 느끼고 자주 외로움을 경험하는 경향이 있습니다."
+
+    return res
+
+def res_person(df):
+    global labels_person
+
+    res = ""
+    index = list(df.index)
+    col = list(df.columns)
+
+    tree_size = 0
+
+    # 클래스에 따른 해석 추가
+    for i, label in enumerate(labels_person):
+        num = index.count(i)
+
+        if label =="사람전체":
+            res += '클래스 0에 대한 해석'
+        elif label == "머리":
+            res += '클래스 1에 대한 해석'
+        elif label == "얼굴":
+            res += '클래스 2에 대한 해석'
+        elif label == "눈":
+            res += '클래스 3에 대한 해석'
+        elif label == "코":
+            res += '클래스 4에 대한 해석'
+        elif label == "입":
+            res += '클래스 5에 대한 해석'
+        elif label == "귀":
+            res += '클래스 6에 대한 해석'
+        elif label == "머리카락":
+            res += '클래스 7에 대한 해석'
+        elif label == "목":
+            res += '클래스 8에 대한 해석'
+        elif label == "상체":
+            res += '클래스 9에 대한 해석'
+        elif label == "팔":
+            res += '클래스 10에 대한 해석'
+        elif label == "손":
+            res += '클래스 11에 대한 해석'
+        elif label == "다리":
+            res += '클래스 12에 대한 해석'
+        elif label == "발":
+            res += '클래스 13에 대한 해석'
+        elif label == "단추":
+            res += '클래스 14에 대한 해석'
+        elif label == "주머니":
+            res += '클래스 15에 대한 해석'
+        elif label == "운동화":
+            res += '클래스 16에 대한 해석'
+        elif label == "여자구두":
+            res += '클래스 17에 대한 해석'
+
 
     return res

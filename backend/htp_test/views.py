@@ -6,9 +6,9 @@ from django.conf import settings
 import jwt
 from member.models import Member
 from htp_test.models import HTP, Image_house, Image_tree, Image_person
-from htp_test.interprete import res_tree
+from htp_test.interprete import res_tree, res_person
 
-sys.path.append('D:/CAPSTONE_HTP/HTP-backend/backend/htp_test/yolov5/')
+sys.path.append('C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/yolov5')
 
 from . import views
 from yolov5 import detect
@@ -99,13 +99,13 @@ def analyze_img_house(request):
             #여기에서 인공지능 분석 등을 수행
             image_path = image_model_house.image.path
             
-            detect.run(source = image_path, weights = r'D:/CAPSTONE_HTP/HTP-backend/backend/htp_test/house_model/best.pt', save_txt=True)
+            detect.run(source = image_path, weights = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/house_model/best.pt', save_txt=True)
 
-            # #확장자 제거
+            # 확장자 제거
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_house.image.name))
 
-            # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = r'D:/CAPSTONE_HTP/HTP-backend/backend/runs/detect/exp/labels/'+str(image_file_name)+r'.txt'
+            # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/runs/detect/exp/labels/'+str(image_file_name)+r'.txt'
             print(image_file_name)
             print(file_path)
 
@@ -122,7 +122,7 @@ def analyze_img_house(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-            shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/runs/detect/exp/")
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/runs/detect/exp/")
          
             # JSON 형식의 응답 생성
             result_data_house = {
@@ -149,12 +149,12 @@ def analyze_img_tree(request):
             image_path = image_model_tree.image.path
 
             #여기에서 인공지능 분석 등을 수행
-            detect.run(weights=r'D:\Capstone_HTP\HTP-backend\backend\htp_test\tree_model\best.pt', source=image_path, project='./result', save_txt=True )
+            detect.run(weights=r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/tree_model/best.pt', source=image_path, project='./result', save_txt=True )
             
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_tree.image.name))
 
-            # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = r'D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
+            # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
 
             df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
@@ -174,7 +174,7 @@ def analyze_img_tree(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-            # shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/")
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/")
          
             # JSON 형식의 응답 생성
             result_data_tree = {
@@ -186,8 +186,15 @@ def analyze_img_tree(request):
 
     return JsonResponse({"error": "Invalid request method"})
 
+
 def analyze_img_person(request):
     if request.method == 'POST':
+
+        # token = request.META.get('HTTP_AUTHORIZATION')
+        # decoded = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
+        # user_id = decoded.get('user_id')
+
+        # user = Member.objects.get(user_id=user_id)
 
         # 이미지 업로드를 위한 폼에서 'image' 필드 설정
         # POSTMAN에서 KEY 값을 image라 작성해야 함
@@ -198,11 +205,23 @@ def analyze_img_person(request):
             image_model_person = Image_person(image=uploaded_image)
             image_model_person.save()
 
-            #여기에서 인공지능 분석 등을 수행
+            image_path = image_model_person.image.path
 
+            #여기에서 인공지능 분석 등을 수행
+            detect.run(weights=r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/tree_model/best.pt', source=image_path, project='./result', save_txt=True )
+            
+            image_file_name, _ = os.path.splitext(os.path.basename(image_model_person.image.name))
+
+            # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
+
+            df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
             # 분석 결과 생성 (랜덤값)
-            person_result = random.randint(0, 10)
+
+            person_result = res_person(df)
+            
+            # person_result = random.randint(0, 10)
             
             # 이전에 생성된 HTP 객체 가져오기
             htp_obj = HTP.objects.latest('id')
@@ -214,7 +233,8 @@ def analyze_img_person(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-        
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/")
+         
             # JSON 형식의 응답 생성
             result_data_person = {
                 "image_url": image_model_person.image.url,

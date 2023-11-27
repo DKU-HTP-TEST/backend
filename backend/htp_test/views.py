@@ -1,21 +1,20 @@
-import os
-import random
+import random, sys, os, shutil
 from datetime import datetime 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 import jwt
 from member.models import Member
-from .models import HTP, Image_house, Image_tree, Image_person
-from member.models import Member
+from htp_test.models import HTP, Image_house, Image_tree, Image_person
+from htp_test.interprete import res_tree
 
-import torch
-from torchvision import transforms
-from PIL import Image
+sys.path.append('D:/CAPSTONE_HTP/HTP-backend/backend/htp_test/yolov5/')
 
-import sys
-sys.path.append('C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/yolov5/')
+from . import views
 from yolov5 import detect
+
+import pandas as pd
+
 
 def res_house(label, x, y, w, h):
     class_label = f'클래스: {label}'
@@ -55,6 +54,7 @@ def res_house(label, x, y, w, h):
 
 
     return interpretation
+
 
 # Create your views here.
 def res_house_from_file(file_path):
@@ -99,14 +99,15 @@ def analyze_img_house(request):
             #여기에서 인공지능 분석 등을 수행
             image_path = image_model_house.image.path
             
-            detect.run(source = image_path, weights = 'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/house_model/best.pt', save_txt=True)
+            detect.run(source = image_path, weights = r'D:/CAPSTONE_HTP/HTP-backend/backend/htp_test/house_model/best.pt', save_txt=True)
 
-            #확장자 제거
+            # #확장자 제거
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_house.image.name))
 
-            # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = f'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/runs/detect/exp/labels/{image_file_name}.txt'
+            # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'D:/CAPSTONE_HTP/HTP-backend/backend/runs/detect/exp/labels/'+str(image_file_name)+r'.txt'
             print(image_file_name)
+            print(file_path)
 
             # house_result = res_house(result)
             house_result = res_house_from_file(file_path)
@@ -121,6 +122,7 @@ def analyze_img_house(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
+            shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/runs/detect/exp/")
          
             # JSON 형식의 응답 생성
             result_data_house = {
@@ -144,11 +146,23 @@ def analyze_img_tree(request):
             image_model_tree = Image_tree(image=uploaded_image)
             image_model_tree.save()
 
-            #여기에서 인공지능 분석 등을 수행
+            image_path = image_model_tree.image.path
 
+            #여기에서 인공지능 분석 등을 수행
+            detect.run(weights=r'D:\Capstone_HTP\HTP-backend\backend\htp_test\tree_model\best.pt', source=image_path, project='./result', save_txt=True )
+            
+            image_file_name, _ = os.path.splitext(os.path.basename(image_model_tree.image.name))
+
+            # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
+
+            df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
             # 분석 결과 생성 (랜덤값)
-            tree_result = random.randint(0, 10)
+
+            tree_result = res_tree(df)
+            
+            # tree_result = random.randint(0, 10)
             
             # 이전에 생성된 HTP 객체 가져오기
             htp_obj = HTP.objects.latest('id')
@@ -160,6 +174,7 @@ def analyze_img_tree(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
+            # shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/")
          
             # JSON 형식의 응답 생성
             result_data_tree = {

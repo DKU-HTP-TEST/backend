@@ -466,3 +466,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,python,node,vuejs,django,venv
 
 
+backend/htp_test/yolov5

@@ -188,7 +188,7 @@ def analyze_img_person(request):
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
             shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/")
-            # shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/img_person/")
+            shutil.rmtree(r"D:/Capstone_HTP/HTP-backend/backend/img_person/")
          
             # JSON 형식의 응답 생성
             result_data_person = {
@@ -248,8 +248,9 @@ def del_result(request):
         user = Member.objects.get(user_id=user_id)
 
         del_date = request.GET.get('del_date')
+        id = request.GET.get('del_id')
 
-        result = HTP.objects.get(user_id = user, created_date = del_date)
+        result = HTP.objects.get(user_id = user, created_date = del_date, id=id)
         result.delete()
 
         return HttpResponse("삭제 성공", status=200)

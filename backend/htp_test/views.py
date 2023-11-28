@@ -53,13 +53,13 @@ def analyze_img_house(request):
             image_path = image_model_house.image.path
 
             #인공지능 실행
-            detect.run(source = image_path, weights = 'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/house_model/best.pt', save_txt=True)
+            detect.run(source = image_path, weights = r'D:\Capstone_HTP\HTP-backend\backend\htp_test\house_model\best.pt', save_txt=True)
         
             #확장자 제거
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_house.image.name))
 
             # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = f'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/runs/detect/exp/labels/'+str(image_file_name)+r'.txt'
+            file_path = r'D:\Capstone_HTP\HTP-backend\backend\runs\detect\exp\labels\\'+str(image_file_name)+r'.txt'
             print(image_file_name)
             print(file_path)
 
@@ -101,12 +101,12 @@ def analyze_img_tree(request):
             image_path = image_model_tree.image.path
 
             #여기에서 인공지능 분석 등을 수행
-            detect.run(weights=r'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/tree_model/best.pt', source=image_path, project='./result', save_txt=True )
+            detect.run(weights=r'D:\Capstone_HTP\HTP-backend\backend\htp_test\tree_model\best.pt', source=image_path, project='./result', save_txt=True )
             
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_tree.image.name))
 
             # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = r'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
+            file_path = r'D:\Capstone_HTP\HTP-backend\backend\result\exp\labels\\'+str(image_file_name)+r'.txt'
 
             df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
@@ -162,12 +162,12 @@ def analyze_img_person(request):
             img_w, img_h = Image.open(image_path).size
 
             #여기에서 인공지능 분석 등을 수행
-            detect.run(weights=r'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/tree_model/best.pt', source=image_path, project='./result', save_txt=True )
+            detect.run(weights=r'D:\Capstone_HTP\HTP-backend\backend\htp_test\person_model\best.pt', source=image_path, project='./result', save_txt=True )
             
             image_file_name, _ = os.path.splitext(os.path.basename(image_model_person.image.name))
 
             # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
-            file_path = r'C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
+            file_path = r'D:\Capstone_HTP\HTP-backend\backend\result\exp\labels\\'+str(image_file_name)+r'.txt'
 
             df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
@@ -187,7 +187,8 @@ def analyze_img_person(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-            shutil.rmtree(r"C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/result/exp/")
+            shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/")
+            # shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/img_person/")
          
             # JSON 형식의 응답 생성
             result_data_person = {

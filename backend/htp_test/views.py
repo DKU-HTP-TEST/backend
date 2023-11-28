@@ -123,6 +123,7 @@ def analyze_img_house(request):
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
             shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/runs/detect/exp/")
+            shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/img_house/")
          
             # JSON 형식의 응답 생성
             result_data_house = {
@@ -174,7 +175,8 @@ def analyze_img_tree(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-            # shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/")
+            shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/result/exp/")
+            shutil.rmtree(r"D:/CAPSTONE_HTP/HTP-backend/backend/img_tree/")
          
             # JSON 형식의 응답 생성
             result_data_tree = {

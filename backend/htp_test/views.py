@@ -1,21 +1,27 @@
-import os
-import random
+import random, sys, os, shutil
 from datetime import datetime 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 import jwt
 from member.models import Member
-from .models import HTP, Image_house, Image_tree, Image_person
-from member.models import Member
+from htp_test.models import HTP, Image_house, Image_tree, Image_person
+from htp_test.interprete import res_tree, res_person
 
 import torch
 from torchvision import transforms
 # from PIL import Image
 
-import sys
-sys.path.append('C:/Users/윤해빈/OneDrive/바탕 화면/캡스톤 2학기/Backend/backend/htp_test/yolov5/')
+from . import views
 from yolov5 import detect
+
+import pandas as pd
+from PIL import Image
+
+
+import pandas as pd
+from PIL import Image
+
 
 # from collections import defaultdict
 # # 각 클래스의 개수를 저장할 딕셔너리
@@ -28,6 +34,8 @@ from yolov5 import detect
     #유무가 필요한 클래스: 지붕, 창문, 문, 연기, 울타리, 길, 연못, 산, 꽃, 잔디, 테양 -> 해결
     # 클래스에 따른 해석 추가
     
+
+
 
 # Create your views here.
 def res_house(file_path):
@@ -153,6 +161,7 @@ def analyze_img_house(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/runs/detect/exp/")
          
             # JSON 형식의 응답 생성
             result_data_house = {
@@ -176,11 +185,23 @@ def analyze_img_tree(request):
             image_model_tree = Image_tree(image=uploaded_image)
             image_model_tree.save()
 
-            #여기에서 인공지능 분석 등을 수행
+            image_path = image_model_tree.image.path
 
+            #여기에서 인공지능 분석 등을 수행
+            detect.run(weights=r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/tree_model/best.pt', source=image_path, project='./result', save_txt=True )
+            
+            image_file_name, _ = os.path.splitext(os.path.basename(image_model_tree.image.name))
+
+            # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
+
+            df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
             # 분석 결과 생성 (랜덤값)
-            tree_result = random.randint(0, 10)
+
+            tree_result = res_tree(df)
+            
+            # tree_result = random.randint(0, 10)
             
             # 이전에 생성된 HTP 객체 가져오기
             htp_obj = HTP.objects.latest('id')
@@ -192,6 +213,7 @@ def analyze_img_tree(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/")
          
             # JSON 형식의 응답 생성
             result_data_tree = {
@@ -203,8 +225,15 @@ def analyze_img_tree(request):
 
     return JsonResponse({"error": "Invalid request method"})
 
+
 def analyze_img_person(request):
     if request.method == 'POST':
+
+        # token = request.META.get('HTTP_AUTHORIZATION')
+        # decoded = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
+        # user_id = decoded.get('user_id')
+
+        # user = Member.objects.get(user_id=user_id)
 
         # 이미지 업로드를 위한 폼에서 'image' 필드 설정
         # POSTMAN에서 KEY 값을 image라 작성해야 함
@@ -215,11 +244,24 @@ def analyze_img_person(request):
             image_model_person = Image_person(image=uploaded_image)
             image_model_person.save()
 
-            #여기에서 인공지능 분석 등을 수행
+            image_path = image_model_person.image.path
+            img_w, img_h = Image.open(image_path).size
 
+            #여기에서 인공지능 분석 등을 수행
+            detect.run(weights=r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/htp_test/tree_model/best.pt', source=image_path, project='./result', save_txt=True )
+            
+            image_file_name, _ = os.path.splitext(os.path.basename(image_model_person.image.name))
+
+            # # .txt 확장자를 추가하여 텍스트 파일 경로 생성
+            file_path = r'C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/labels/'+str(image_file_name)+r'.txt'
+
+            df = pd.read_table(file_path, sep=' ', index_col=0, header=None, names=['label', 'x', 'y', 'w', 'h'])
 
             # 분석 결과 생성 (랜덤값)
-            person_result = random.randint(0, 10)
+
+            person_result = res_person(df, img_w, img_h)
+            
+            # person_result = random.randint(0, 10)
             
             # 이전에 생성된 HTP 객체 가져오기
             htp_obj = HTP.objects.latest('id')
@@ -231,7 +273,8 @@ def analyze_img_person(request):
             #결과 나왔으면 이미지 삭제..?
             # image_model = Image.objects.get(pk=)
             # image_model.delete()
-        
+            shutil.rmtree(r"C:/Users/jimin/OneDrive/바탕 화면/2학기-onedrive/@학교 수업/캡스톤디자인2/HTP_backend/backend/result/exp/")
+         
             # JSON 형식의 응답 생성
             result_data_person = {
                 "image_url": image_model_person.image.url,
